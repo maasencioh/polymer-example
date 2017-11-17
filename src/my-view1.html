@@ -1,0 +1,70 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="../bower_components/ag-grid-polymer/ag-grid-polymer.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
+
+<dom-module id="my-view1">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+
+        padding: 10px;
+      }
+    </style>
+
+    <div class="card">
+      <div class="circle">1</div>
+      <h1>View One</h1>
+      <div style="width: 800px;">
+        <ag-grid-polymer id="myGrid"
+          style="width: 100%; height: 350px;"
+          class="ag-theme-fresh"
+          enableSorting
+          enable-filter
+          rowData="[[rowData]]"
+          columnDefs="[[columnDefs]]">
+        </ag-grid-polymer>
+      </div>
+      <iron-ajax
+        auto
+        url="https://jsonplaceholder.typicode.com/comments"
+        handle-as="json"
+        on-response="handleResponse"
+        debounce-duration="300">
+      </iron-ajax>
+    </div>
+  </template>
+
+  <script>
+    class MyView1 extends Polymer.Element {
+      static get is() {
+        return 'my-view1';
+      }
+      
+      constructor() {
+        super();
+        this.rowData = [{id: 1, name: 'bla', email: 'as', body: 'asta'}];
+        this.columnDefs = [{
+          headerName: 'Id',
+          field: 'id'
+        }, {
+          headerName: 'Name',
+          field: 'name'
+        }, {
+          headerName: 'Email',
+          field: 'email'
+        }, {
+          headerName: 'Content',
+          field: 'body'
+        }];
+      }
+
+      handleResponse(event) {
+        this.rowData = event.detail.response;
+      }
+    }
+
+    window.customElements.define(MyView1.is, MyView1);
+  </script>
+</dom-module>
